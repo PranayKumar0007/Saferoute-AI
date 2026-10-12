@@ -1,0 +1,176 @@
+    <div id="tab-experiments" class="tab-content">
+      
+      <!-- Academic Disclaimer Note -->
+      <div style="background: rgba(59, 130, 246, 0.15); border: 1px solid #3b82f6; border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 18px; display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 1.5rem;">ℹ️</span>
+        <div style="font-size: 0.82rem; color: #bfdbfe;">
+          <strong>Collegiate Prototype Notice:</strong> Trained on synthetic urban transit telemetry (6,000 samples) with Gaussian noise + 5% stochastic label noise for demonstration. Full real-world deployment requires labelled telematics from TSRTC/BMTC transport fleets.
+        </div>
+      </div>
+
+      <!-- Row 1: Model Comparison Chart & 5-Fold CV Table -->
+      <div class="exp-grid">
+        
+        <!-- Model Comparison Chart -->
+        <div class="chart-card">
+          <div class="card-title"><span>📊</span> Model Performance Comparison (Stratified 5-Fold CV)</div>
+          <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 10px;">
+            Benchmarked against Logistic Regression, Decision Tree, and Random Forest.
+          </div>
+          <div style="position: relative; height: 260px;">
+            <canvas id="model-comparison-chart"></canvas>
+          </div>
+        </div>
+
+        <!-- 5-Fold Cross Validation Table -->
+        <div class="chart-card">
+          <div class="card-title"><span>📋</span> Cross-Validation Benchmarks &amp; Hyperparameters</div>
+          <div class="data-table-wrap" style="margin-top: 10px;">
+            <table class="data-table" id="cv-scores-table">
+              <thead>
+                <tr>
+                  <th>Model Candidate</th>
+                  <th>CV Mean F1</th>
+                  <th>CV Std</th>
+                  <th>Test Acc</th>
+                  <th>Test F1</th>
+                </tr>
+              </thead>
+              <tbody id="cv-table-body">
+                <!-- Dynamically loaded -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Hyperparameter Retraining Panel -->
+          <div style="margin-top: 16px; background: var(--bg-primary); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <div style="font-size: 0.78rem; font-weight: 700; margin-bottom: 8px;">🔄 Retrain Model with Custom Parameters:</div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr) auto; gap: 8px; align-items: end;">
+              <div>
+                <label style="font-size: 0.68rem; color: var(--text-secondary);">n_estimators</label>
+                <input type="number" id="train-estimators" value="100" min="10" max="300" style="width: 100%; padding: 4px; background: #1e293b; border: 1px solid #475569; color: #fff; border-radius: 4px;">
+              </div>
+              <div>
+                <label style="font-size: 0.68rem; color: var(--text-secondary);">max_depth</label>
+                <input type="number" id="train-depth" value="12" min="3" max="25" style="width: 100%; padding: 4px; background: #1e293b; border: 1px solid #475569; color: #fff; border-radius: 4px;">
+              </div>
+              <div>
+                <label style="font-size: 0.68rem; color: var(--text-secondary);">random_state</label>
+                <input type="number" id="train-seed" value="42" style="width: 100%; padding: 4px; background: #1e293b; border: 1px solid #475569; color: #fff; border-radius: 4px;">
+              </div>
+              <button class="btn btn-primary" id="btn-retrain" onclick="retrainModel()" style="padding: 6px 12px;">Retrain API</button>
+            </div>
+            <div id="retrain-status" style="font-size: 0.72rem; color: var(--accent-green); margin-top: 6px;"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Row 2: Confusion Matrix & Feature Importance Images -->
+      <div class="exp-grid">
+        <div class="chart-card">
+          <div class="card-title"><span>🎯</span> Confusion Matrix (Random Forest)</div>
+          <img src="/artifacts/confusion_matrix.png" alt="Confusion Matrix" class="plot-img" id="img-cm">
+        </div>
+        <div class="chart-card">
+          <div class="card-title"><span>🌲</span> Gini Feature Importance Ranking</div>
+          <img src="/artifacts/feature_importance.png" alt="Feature Importance" class="plot-img" id="img-fi">
+        </div>
+      </div>
+
+      <!-- Row 3: Classification Report & Ablation Study -->
+      <div class="exp-grid">
+        
+        <!-- Per-class Classification Report -->
+        <div class="chart-card">
+          <div class="card-title"><span>📑</span> Best Model Classification Report</div>
+          <div class="data-table-wrap" style="margin-top: 10px;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Class</th>
+                  <th>Precision</th>
+                  <th>Recall</th>
+                  <th>F1-Score</th>
+                  <th>Support</th>
+                </tr>
+              </thead>
+              <tbody id="class-report-body">
+                <!-- Dynamically loaded -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Ablation Study Table -->
+        <div class="chart-card">
+          <div class="card-title"><span>🔬</span> Feature Group Ablation Study</div>
+          <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 8px;">
+            Measures drop in Macro F1 when individual feature groups are removed from the pipeline:
+          </div>
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Ablated Group</th>
+                  <th>Ablated F1</th>
+                  <th>Δ F1 Delta</th>
+                  <th>Performance Drop</th>
+                </tr>
+              </thead>
+              <tbody id="ablation-table-body">
+                <!-- Dynamically loaded -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Row 4: First Principles Mathematical Card -->
+      <div class="math-card">
+        <div class="card-title" style="color: #60a5fa;"><span>📐</span> Mathematical Derivations from First Principles</div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 10px;">
+          <div>
+            <div style="font-weight: 700; font-size: 0.82rem; color: #f1f5f9;">1. Haversine Great-Circle Formula</div>
+            <div class="formula-box">
+              a = sin²(Δφ/2) + cos(φ₁)cos(φ₂)sin²(Δλ/2)<br>
+              c = 2 · atan2(√a, √(1−a))<br>
+              d = R · c  (R = 6,371,000 m)
+            </div>
+            <div style="font-size: 0.72rem; color: var(--text-secondary);">Accounts for spherical Earth curvature without planar distortion across transit routes.</div>
+          </div>
+          <div>
+            <div style="font-weight: 700; font-size: 0.82rem; color: #f1f5f9;">2. Instantaneous Velocity</div>
+            <div class="formula-box">
+              v = (d_haversine / Δt) × 3.6  [km/h]<br>
+              Var(v) = (1/N) Σ (v_i − μ_v)²
+            </div>
+            <div style="font-size: 0.72rem; color: var(--text-secondary);">Sliding window mean and variance to identify erratic speed spikes and prolonged zero-speed halts.</div>
+          </div>
+          <div>
+            <div style="font-weight: 700; font-size: 0.82rem; color: #f1f5f9;">3. Point-to-Polyline Projection</div>
+            <div class="formula-box">
+              t = clamp((P − A) · (B − A) / |B − A|², 0, 1)<br>
+              C = A + t · (B − A)<br>
+              Deviation = Haversine(P, C)
+            </div>
+            <div style="font-size: 0.72rem; color: var(--text-secondary);">Determines perpendicular Euclidean offset from planned route line segment.</div>
+          </div>
+        </div>
+
+        <!-- Live Worked Example -->
+        <div style="margin-top: 14px; background: #1e293b; padding: 12px; border-radius: var(--radius-sm); border: 1px solid #475569;">
+          <div style="font-size: 0.78rem; font-weight: 700; color: #38bdf8;">Live Worked Example (Evaluated at Current Bus Fix):</div>
+          <div id="live-math-worked-example" style="font-family: monospace; font-size: 0.75rem; color: #e2e8f0; margin-top: 6px; line-height: 1.6;">
+            Loading live first-principles parameters...
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- TAB 3: CEP VALIDATION (CRITERION 3, WP2+WP6)-->
+    <!-- ========================================== -->

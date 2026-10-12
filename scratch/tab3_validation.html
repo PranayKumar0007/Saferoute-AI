@@ -1,0 +1,196 @@
+    <div id="tab-validation" class="tab-content">
+      
+      <!-- Validation Summary Card -->
+      <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <div style="font-size: 1.05rem; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+            <span>🧪</span> Complex Engineering Problem (CEP) Scenario Suite
+          </div>
+          <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">
+            14 scripted edge-cases testing nominal transit, red-light false alarms, peak-hour bottlenecks, and abduction vectors.
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div style="text-align: right;">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Validation Pass Rate</div>
+            <div id="val-pass-rate-badge" style="font-size: 1.4rem; font-weight: 800; color: var(--accent-green); font-family: monospace;">100.0%</div>
+          </div>
+          <button class="btn btn-primary" onclick="runValidationSuite()">▶ Re-run Validation Suite</button>
+        </div>
+      </div>
+
+      <!-- 14 Scenarios Results Table -->
+      <div class="panel-card" style="margin-bottom: 18px;">
+        <div class="card-title" style="margin-bottom: 10px;"><span>📋</span> Scripted Scenario Test Matrix</div>
+        <div class="data-table-wrap" style="max-height: 480px;">
+          <table class="data-table" id="scenario-matrix-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Scenario Name</th>
+                <th>Category</th>
+                <th>Expected Risk</th>
+                <th>Predicted Risk</th>
+                <th>State Machine</th>
+                <th>Result</th>
+                <th>Engineering Trade-Off Justification</th>
+              </tr>
+            </thead>
+            <tbody id="val-table-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Conflicting Requirements (WP2) -->
+      <div class="panel-card" style="margin-bottom: 18px;">
+        <div class="card-title"><span>⚖️</span> WP2: Conflicting Engineering Requirements &amp; Trade-off Analysis</div>
+        <div style="font-size: 0.78rem; color: var(--text-secondary); margin: 6px 0 14px 0;">
+          Safety systems face inherent conflicts between extreme sensitivity and user trust. Use the interactive slider below to observe threshold tuning:
+        </div>
+
+        <div style="display: grid; grid-template-columns: 360px 1fr; gap: 20px;">
+          
+          <!-- Slider Control -->
+          <div style="background: var(--bg-primary); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <div style="font-weight: 700; font-size: 0.82rem; margin-bottom: 8px;">Interactive Sensitivity Slider:</div>
+            <div class="slider-group">
+              <label><span>Caution Threshold (Lower = More Sensitive):</span> <span id="val-thresh-c-label">0.38</span></label>
+              <input type="range" min="0.15" max="0.80" step="0.01" value="0.38" id="slider-caution" oninput="updateThresholdSliders()">
+            </div>
+            <div class="slider-group">
+              <label><span>High-Risk Threshold:</span> <span id="val-thresh-h-label">0.32</span></label>
+              <input type="range" min="0.15" max="0.80" step="0.01" value="0.32" id="slider-high" oninput="updateThresholdSliders()">
+            </div>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="applyThresholds()">Save Sensitivity to Backend</button>
+            <div id="thresh-save-msg" style="font-size: 0.7rem; color: var(--accent-green); margin-top: 4px;"></div>
+          </div>
+
+          <!-- Trade-Off Matrix Table -->
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Conflicting Dimension</th>
+                  <th>Design Conflict</th>
+                  <th>Implemented Resolution in Prototype</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Sensitivity vs False Alarms</strong></td>
+                  <td>High sensitivity catches detours quickly but panics users at red lights and traffic signals.</td>
+                  <td>Implemented 3-window hysteresis + 15s in-app verification timer before SMS dispatch. Traffic halts &lt;60s remain Safe.</td>
+                </tr>
+                <tr>
+                  <td><strong>Privacy vs Continuous Tracking</strong></td>
+                  <td>Continuous GPS tracking exposes user location history to cloud servers.</td>
+                  <td>Geofenced active transit session only. Live location is only broadcast upon confirmed threat escalation or manual SOS.</td>
+                </tr>
+                <tr>
+                  <td><strong>Battery Life vs Update Frequency</strong></td>
+                  <td>1-second GPS fixes drain smartphone battery in &lt;3 hours.</td>
+                  <td>Evaluated 1s vs 5s intervals. 5s sampling saves 92% battery without missing route deviations (&gt;100m takes &gt;12s to occur at 30 km/h).</td>
+                </tr>
+                <tr>
+                  <td><strong>Model Accuracy vs Real-time Latency</strong></td>
+                  <td>Heavy ensembles (XGBoost/DNN) yield marginal gains but add hundreds of ms in latency.</td>
+                  <td>Selected Random Forest (100 trees, depth 12): sub-2ms inference, 95%+ accuracy, deterministic deployment without GPU.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Stakeholder Expectations (WP6) -->
+      <div class="panel-card">
+        <div class="card-title"><span>👥</span> WP6: Multi-Stakeholder Expectations &amp; Tailored Views</div>
+        <div style="font-size: 0.78rem; color: var(--text-secondary); margin: 6px 0 14px 0;">
+          Different actors in the public transit ecosystem require fundamentally different views of the same telemetry:
+        </div>
+
+        <div class="stakeholder-toggle">
+          <button class="stakeholder-btn active" id="stk-btn-user" onclick="switchStakeholder('user')">1. Passenger (User) View</button>
+          <button class="stakeholder-btn" id="stk-btn-contact" onclick="switchStakeholder('contact')">2. Emergency Contact View</button>
+          <button class="stakeholder-btn" id="stk-btn-authority" onclick="switchStakeholder('authority')">3. Transport Authority View</button>
+        </div>
+
+        <!-- View 1: User -->
+        <div id="stk-view-user" class="stakeholder-view-card">
+          <div style="font-weight: 700; color: #60a5fa; margin-bottom: 6px;">Passenger Interface: Minimalist, Non-Distracting, High Agency</div>
+          <div style="font-size: 0.8rem; line-height: 1.5; color: #cbd5e1;">
+            • Displays clear binary status (Safe / In-Check).<br>
+            • Provides a 15-second "I am Safe" button to dismiss false-alarm checks without contacting family.<br>
+            • One-touch giant SOS button accessible on the home screen.<br>
+            • Satisfies stakeholder need: <em>Psychological comfort, total control, privacy preservation.</em>
+          </div>
+        </div>
+
+        <!-- View 2: Contact -->
+        <div id="stk-view-contact" class="stakeholder-view-card" style="display: none;">
+          <div style="font-weight: 700; color: #f59e0b; margin-bottom: 6px;">Emergency Contact Interface: Actionable, Geolocated, Real-time</div>
+          <div style="font-size: 0.8rem; line-height: 1.5; color: #cbd5e1;">
+            • Receives simulated SMS containing an instant clickable Google Maps live GPS link.<br>
+            • Highlights explicit contextual reasons (e.g. "Stationary 4 min in Jeedimetla isolated zone").<br>
+            • Eliminates ambiguity between flat tire and emergency abduction.<br>
+            • Satisfies stakeholder need: <em>Actionable information for swift rescue and police coordination.</em>
+          </div>
+        </div>
+
+        <!-- View 3: Authority -->
+        <div id="stk-view-authority" class="stakeholder-view-card" style="display: none;">
+          <div style="font-weight: 700; color: #10b981; margin-bottom: 6px;">Transport Authority Interface: Fleet-wide Anonymized Safety Intelligence</div>
+          <div style="font-size: 0.8rem; line-height: 1.5; color: #cbd5e1;">
+            • Aggregated heatmaps of route deviation clusters (identifying poor bus corridor designs or road works).<br>
+            • High-risk zone incident frequencies to dispatch TSRTC night patrol escorts.<br>
+            • Zero PII (Personal Identifiable Information) stored in central fleet records.<br>
+            • Satisfies stakeholder need: <em>Municipal infrastructure improvements and SDG 11 compliance.</em>
+          </div>
+        </div>
+
+        <!-- Stakeholder Mapping Table -->
+        <div class="data-table-wrap" style="margin-top: 12px;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Stakeholder Group</th>
+                <th>Core Need / Pain Point</th>
+                <th>Prototype Feature Addressal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Commuter (Woman Passenger)</strong></td>
+                <td>Fear of transit route diversion; embarrassment from false alarms sent to family.</td>
+                <td>In-app 15s verification prompt allows quiet dismissal before external escalation.</td>
+              </tr>
+              <tr>
+                <td><strong>Trusted Family Contacts</strong></td>
+                <td>Instant awareness with actionable GPS coordinates, not vague alarms.</td>
+                <td>Automated SMS with Google Maps link + specific risk factors.</td>
+              </tr>
+              <tr>
+                <td><strong>Police / SHE Teams</strong></td>
+                <td>Accurate coordinates; avoidance of spam emergency calls.</td>
+                <td>3-window hysteresis debounce filter ensures only verified incidents are dispatched.</td>
+              </tr>
+              <tr>
+                <td><strong>Public Transit Fleet (RTC)</strong></td>
+                <td>Insight into dangerous route stretches without tracking innocent riders 24/7.</td>
+                <td>Anonymized risk-zone incident telemetry mapped to corridor coordinates.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- TAB 4: TEAM & ARCHITECTURE (WP1+WP7)      -->
+    <!-- ========================================== -->

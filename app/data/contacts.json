@@ -1,0 +1,23 @@
+[
+  {
+    "id": "c-01",
+    "name": "Smt. Kavitha Masi (Mother)",
+    "phone": "+91 98480 12345",
+    "relation": "Parent",
+    "notify_on": ["caution_timeout", "high_risk", "sos"]
+  },
+  {
+    "id": "c-02",
+    "name": "Sri Ramesh Kaduduram (Father)",
+    "phone": "+91 94401 67890",
+    "relation": "Parent",
+    "notify_on": ["high_risk", "sos"]
+  },
+  {
+    "id": "c-03",
+    "name": "Telangana Women Safety Wing (SHE Teams / 112)",
+    "phone": "+91 94416 69988",
+    "relation": "Emergency Patrol",
+    "notify_on": ["high_risk", "sos"]
+  }
+]

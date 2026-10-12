@@ -1,0 +1,199 @@
+    <div id="tab-monitor" class="tab-content active">
+      <div class="monitor-layout">
+        
+        <!-- Left: Map Container -->
+        <div class="map-container-card">
+          <div class="card-header">
+            <div class="card-title">
+              <span>📍</span> Hyderabad Transit Corridor (Dundigal ➔ Secunderabad)
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <span id="bus-step-counter" style="font-size: 0.75rem; color: var(--text-secondary); font-family: monospace;">Step 0/320</span>
+              <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.72rem;" onclick="recenterMap()">Recenter</button>
+            </div>
+          </div>
+          
+          <div id="map"></div>
+          
+          <div class="map-legend">
+            <div class="legend-item"><div class="legend-swatch" style="background: #3b82f6;"></div> Planned Route</div>
+            <div class="legend-item"><div class="legend-swatch" style="background: #10b981;"></div> Safe Trail</div>
+            <div class="legend-item"><div class="legend-swatch" style="background: #f59e0b;"></div> Caution Trail</div>
+            <div class="legend-item"><div class="legend-swatch" style="background: #ef4444;"></div> High-Risk Trail</div>
+            <div class="legend-item"><div class="legend-swatch" style="background: rgba(239, 68, 68, 0.4); border: 1px dashed red;"></div> High-Risk Zone Buffer</div>
+            <div class="legend-item"><span>🚌</span> Current Bus Fix</div>
+          </div>
+        </div>
+
+        <!-- Right: Real-time Telemetry & Controls Panel -->
+        <div class="side-panel">
+          
+          <!-- Risk Assessment Card -->
+          <div class="panel-card">
+            <div class="risk-badge-box">
+              <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Current System State</span>
+              <div id="current-risk-pill" class="risk-status-pill safe">
+                <span class="chip-dot green"></span> Safe
+              </div>
+            </div>
+
+            <!-- Caution Countdown Alert Prompt -->
+            <div id="caution-prompt-banner" class="caution-alert-banner">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <div style="font-weight: 700; color: #fbbf24; font-size: 0.85rem;">⚠️ Passenger Safety Check Active</div>
+                  <div style="font-size: 0.72rem; color: #cbd5e1;">Are you safe? Auto-escalation in:</div>
+                </div>
+                <div class="caution-timer-count" id="caution-countdown-val">15.0s</div>
+              </div>
+              <button class="btn btn-success" style="width: 100%; margin-top: 8px;" onclick="confirmSafe()">✓ I am Safe (Dismiss Prompt)</button>
+            </div>
+
+            <!-- Probability Bars -->
+            <div class="prob-container">
+              <div class="prob-row">
+                <div class="prob-label-wrap"><span>Safe Probability</span><span id="prob-safe-pct">85%</span></div>
+                <div class="prob-bar-track"><div id="prob-safe-bar" class="prob-bar-fill prob-fill-safe" style="width: 85%;"></div></div>
+              </div>
+              <div class="prob-row">
+                <div class="prob-label-wrap"><span>Caution Probability</span><span id="prob-caution-pct">12%</span></div>
+                <div class="prob-bar-track"><div id="prob-caution-bar" class="prob-bar-fill prob-fill-caution" style="width: 12%;"></div></div>
+              </div>
+              <div class="prob-row">
+                <div class="prob-label-wrap"><span>High-Risk Probability</span><span id="prob-high-pct">3%</span></div>
+                <div class="prob-bar-track"><div id="prob-high-bar" class="prob-bar-fill prob-fill-high" style="width: 3%;"></div></div>
+              </div>
+            </div>
+
+            <!-- Live Features Grid -->
+            <div class="features-grid">
+              <div class="feature-box">
+                <div class="feat-title">Route Deviation</div>
+                <div class="feat-value" id="feat-dev">18 m</div>
+              </div>
+              <div class="feature-box">
+                <div class="feat-title">Stop Duration</div>
+                <div class="feat-value" id="feat-stop">0 s</div>
+              </div>
+              <div class="feature-box">
+                <div class="feat-title">Window Avg Speed</div>
+                <div class="feat-value" id="feat-speed">32.4 km/h</div>
+              </div>
+              <div class="feature-box">
+                <div class="feat-title">Delay Ratio</div>
+                <div class="feat-value" id="feat-delay">1.02x</div>
+              </div>
+              <div class="feature-box">
+                <div class="feat-title">Night Indicator</div>
+                <div class="feat-value" id="feat-night">No (Day)</div>
+              </div>
+              <div class="feature-box">
+                <div class="feat-title">Risk Zone Proximity</div>
+                <div class="feat-value" id="feat-zone">0.05</div>
+              </div>
+            </div>
+
+            <!-- Top Reasons Box -->
+            <div class="reasons-box">
+              <div class="reasons-title">Explainability / Primary Factors:</div>
+              <ul class="reasons-list" id="reasons-list">
+                <li>Vehicle adhering strictly to planned transit corridor.</li>
+                <li>Normal operating speed with zero unauthorized stationary stops.</li>
+              </ul>
+            </div>
+
+            <!-- Emergency Actions -->
+            <div class="action-grid">
+              <button class="btn btn-sos" onclick="triggerSos()">🚨 MANUAL SOS (INSTANT ALERT)</button>
+              <button class="btn btn-success" onclick="confirmSafe()">✓ I am Safe</button>
+              <button class="btn btn-primary" id="btn-toggle-journey" onclick="toggleJourney()">Pause Journey</button>
+            </div>
+          </div>
+
+          <!-- Scenario Injection & Simulator Controls -->
+          <div class="panel-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Scenario Injection (Examiner Controls)</span>
+              <button class="btn btn-primary" style="padding: 4px 10px; font-size: 0.72rem;" onclick="startDemoMode()">▶ 90s Demo Script</button>
+            </div>
+            
+            <div class="scenario-buttons-grid">
+              <button class="btn-scenario active" id="sc-btn-Normal" onclick="setScenario('Normal')">Normal Ride</button>
+              <button class="btn-scenario" id="sc-btn-Route-Deviation" onclick="setScenario('Route Deviation')">Route Deviation</button>
+              <button class="btn-scenario" id="sc-btn-Prolonged-Stop" onclick="setScenario('Prolonged Stop')">Prolonged Stop</button>
+              <button class="btn-scenario" id="sc-btn-Speed-Anomaly" onclick="setScenario('Speed Anomaly')">Speed Anomaly</button>
+              <button class="btn-scenario" id="sc-btn-Night-Risk" onclick="setScenario('Night + High-Risk Zone')">Night + Risk Zone</button>
+              <button class="btn-scenario" id="sc-btn-Worst-Case" onclick="setScenario('Combined Worst-Case')">Combined Worst-Case</button>
+            </div>
+
+            <!-- Speed & Device controls -->
+            <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-secondary);">
+                <span>Simulation Speed Multiplier:</span>
+                <span id="speed-multiplier-label" style="font-weight: 700; color: #fff;">5x</span>
+              </div>
+              <input type="range" min="1" max="25" value="5" id="speed-slider" onchange="updateSpeed(this.value)">
+              
+              <div style="display: flex; gap: 8px; margin-top: 4px;">
+                <button class="btn btn-secondary" style="flex: 1; font-size: 0.72rem;" onclick="resetJourney()">Reset Origin</button>
+                <button class="btn btn-secondary" style="flex: 1; font-size: 0.72rem;" id="btn-real-gps" onclick="toggleRealGps()">Use My Real GPS</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Bottom Layout: Alert History & Mock Contact Phone -->
+      <div class="bottom-monitor-grid">
+        
+        <!-- Alert History Log -->
+        <div class="panel-card">
+          <div class="card-header" style="padding: 0 0 10px 0; background: transparent;">
+            <div class="card-title"><span>📜</span> System Alert History Log (Stored in SQLite)</div>
+            <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.72rem;" onclick="clearAlerts()">Clear Alerts</button>
+          </div>
+          <div class="data-table-wrap" style="max-height: 420px;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Recipient</th>
+                  <th>Risk Level</th>
+                  <th>Live Location Link</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="alerts-table-body">
+                <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No emergency alerts dispatched yet. Simulation operating in Safe state.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Mock Contact Phone Panel (WP7 Alert Verification) -->
+        <div class="mock-phone">
+          <div class="phone-speaker-bar">
+            <div class="notch-pill"></div>
+          </div>
+          <div class="phone-header">
+            <div>
+              <div class="phone-header-title">📱 Emergency Contact Phone</div>
+              <div style="font-size: 0.65rem; color: #94a3b8;">Receiver: Smt. Kavitha Masi (Mother)</div>
+            </div>
+            <span class="badge badge-sdg" style="font-size: 0.65rem;">MOCK SMS</span>
+          </div>
+          <div class="phone-sms-feed" id="mock-phone-sms-feed">
+            <div style="text-align: center; color: var(--text-muted); font-size: 0.72rem; margin-top: 40px;">
+              Waiting for incoming simulated SMS notifications...
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- TAB 2: EXPERIMENTS (CRITERION 2, WP1+WP3) -->
+    <!-- ========================================== -->

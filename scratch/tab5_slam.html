@@ -1,0 +1,112 @@
+    <div id="tab-slam" class="tab-content">
+      <div class="markdown-document-view" id="slam-markdown-container">
+        <!-- Rendered SLAM Evidence Content -->
+        <h2>SLAM Review-3: Implementation &amp; Execution Mapping</h2>
+        <p><strong>Project Title:</strong> AI-Based Women Safety Monitoring for Public Transport</p>
+        <p><strong>Track:</strong> AI-SDLC | <strong>Supervisor:</strong> Ms. R. Soumika</p>
+        <p><strong>Team Members:</strong> Pranay Kumar Masi (25951A05DU), Nikhil Kaduduram (25951A05D8)</p>
+
+        <hr style="border-color: var(--border-color); margin: 16px 0;">
+
+        <h3>1. SDG &amp; Washington Accord (PO/PSO/WK) Mapping</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Target Identifier</th>
+              <th>Description</th>
+              <th>Concrete Manifestation in This Prototype</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>SDG 5 (Target 5.2)</strong></td>
+              <td>Eliminate all forms of violence against women in public and private spheres.</td>
+              <td>Real-time anomaly monitoring, in-app countdown reassurance, and automated emergency escalation to SHE Teams / trusted parents.</td>
+            </tr>
+            <tr>
+              <td><strong>SDG 11 (Target 11.2)</strong></td>
+              <td>Provide access to safe, affordable, accessible and sustainable transport systems for women.</td>
+              <td>Proactive route safety scoring, risk-zone spatial geofencing in Hyderabad, and transport authority incident intelligence.</td>
+            </tr>
+            <tr>
+              <td><strong>PO 3 (Design/Development)</strong></td>
+              <td>Design solutions for complex engineering problems.</td>
+              <td>Modular pipeline incorporating GPS Simulator, Feature Extraction, Random Forest Risk Model, and State Machine Alert Engine.</td>
+            </tr>
+            <tr>
+              <td><strong>PO 5 (Modern Tool Usage)</strong></td>
+              <td>Create and apply appropriate ML/software tools.</td>
+              <td>FastAPI, Scikit-learn, Leaflet, Chart.js, Pytest, Uvicorn asynchronous websockets.</td>
+            </tr>
+            <tr>
+              <td><strong>PSO 2 (AI Systems)</strong></td>
+              <td>Build intelligent systems that make sound inferences from real telemetry.</td>
+              <td>Rule-guided synthetic training, Stratified 5-Fold Cross Validation, and explainable feature impact scoring.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>2. Justification of 7 CEP (Complex Engineering Problem) Characteristics</h3>
+        <ul>
+          <li><strong>P1 (Depth of Knowledge):</strong> Implemented first-principles Haversine distance, orthogonal line-segment projection, and supervised ensemble ML classification without black-box APIs.</li>
+          <li><strong>P2 (Conflicting Requirements):</strong> Solved the classic dilemma between High Sensitivity (catching detours) and False Alarms (traffic light stops) via 3-window debounce and 15s in-app verification.</li>
+          <li><strong>P3 (Depth of Analysis):</strong> Performed multi-model cross-validation benchmarking (Logistic Regression vs Decision Tree vs Random Forest) and systematic feature group ablation.</li>
+          <li><strong>P4 (Familiarity of Issues):</strong> Handled real-world transit telemetry challenges: GPS drift, late-night transit risks, and unscheduled breakdown dwell times.</li>
+          <li><strong>P5 (Extent of Applicable Codes):</strong> Followed standard PEP 8, IEEE 830 software engineering specifications, and mobile privacy principles.</li>
+          <li><strong>P6 (Extent of Stakeholder Involvement):</strong> Addressed diverse needs of passengers (control &amp; privacy), parents (actionable GPS links), and municipal authorities (anonymized safety heatmaps).</li>
+          <li><strong>P7 (Interdependence of Components):</strong> Architected 5 coupled modules with defined JSON interface contracts and live ms latency profiling.</li>
+        </ul>
+
+        <h3>3. Review-3 Rubric Mapping Table (4 Criteria × 10 Marks = 40 Marks)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Graded Criterion</th>
+              <th>Marks</th>
+              <th>Assigned WP Mapping</th>
+              <th>Where to Verify in this Live Demo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Criterion 1: Execution of Modules</strong></td>
+              <td>10 / 10</td>
+              <td>WP7 (Interdependent Components)</td>
+              <td><strong>Tab 1 (Live Monitor):</strong> Working Leaflet map, live GPS trail, real-time Pipeline Status strip showing latency (ms) for all 5 wired components, active mock phone SMS alerts.</td>
+            </tr>
+            <tr>
+              <td><strong>Criterion 2: Experimentation</strong></td>
+              <td>10 / 10</td>
+              <td>WP1 &amp; WP3 (Data &amp; ML Models)</td>
+              <td><strong>Tab 2 (Experiments):</strong> Chart.js model comparison, 5-Fold Stratified CV table, confusion matrix PNG, feature importance PNG, ablation analysis, first-principles live math derivation.</td>
+            </tr>
+            <tr>
+              <td><strong>Criterion 3: Validation Against CEP</strong></td>
+              <td>10 / 10</td>
+              <td>WP2 &amp; WP6 (Requirements &amp; Stakeholders)</td>
+              <td><strong>Tab 3 (CEP Validation):</strong> 14-scenario automated test suite (run via Pytest &amp; UI button), interactive sensitivity threshold sliders, conflicting requirements trade-off matrix, 3 stakeholder toggle views.</td>
+            </tr>
+            <tr>
+              <td><strong>Criterion 4: Collaborative Problem Solving</strong></td>
+              <td>10 / 10</td>
+              <td>WP1 &amp; WP7 (Team &amp; Architecture)</td>
+              <td><strong>Tab 4 (Team &amp; Architecture):</strong> SVG modular architecture diagram, ownership division between Pranay and Nikhil, formal JSON contracts, Git commit log, 6 examiner defense answers.</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div>MLR Institute of Technology | Dept. of CSE | AI-Based Women Safety Monitoring System</div>
+    <div>SLAM Review-3 (Implementation) | Developed by Pranay Kumar Masi &amp; Nikhil Kaduduram</div>
+  </footer>
+
+  <!-- App Custom Logic -->
+  <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,306 @@
+{
+  "total_scenarios": 14,
+  "passed": 14,
+  "failed": 0,
+  "pass_rate_pct": 100.0,
+  "results": [
+    {
+      "id": "SC-01",
+      "name": "Nominal Daytime Transit (Dundigal Corridor)",
+      "category": "Nominal Operation",
+      "expected_class": 0,
+      "expected_label": "Safe",
+      "predicted_class": 0,
+      "predicted_label": "Safe",
+      "probabilities": {
+        "Safe": 0.779,
+        "Caution": 0.183,
+        "High-Risk": 0.038
+      },
+      "state_machine_state": "Safe",
+      "passed": true,
+      "engineering_note": "Confirms baseline accuracy; no spurious alarm raised during smooth transit.",
+      "top_reasons": [
+        "Vehicle actively following planned route within tolerance (<100m).",
+        "Consistent transit motion (avg speed 36 km/h)."
+      ]
+    },
+    {
+      "id": "SC-02",
+      "name": "Normal Traffic Slowdown (Bowenpally Approach)",
+      "category": "Nominal Operation",
+      "expected_class": 0,
+      "expected_label": "Safe",
+      "predicted_class": 0,
+      "predicted_label": "Safe",
+      "probabilities": {
+        "Safe": 0.95,
+        "Caution": 0.026,
+        "High-Risk": 0.024
+      },
+      "state_machine_state": "Safe",
+      "passed": true,
+      "engineering_note": "Ensures crawl speed on planned route is not misclassified as an anomaly.",
+      "top_reasons": [
+        "Vehicle actively following planned route within tolerance (<100m).",
+        "Consistent transit motion (avg speed 11 km/h)."
+      ]
+    },
+    {
+      "id": "SC-03",
+      "name": "Legitimate Traffic Signal Dwell (Suchitra Junction)",
+      "category": "False-Positive Check",
+      "expected_class": 0,
+      "expected_label": "Safe",
+      "predicted_class": 0,
+      "predicted_label": "Safe",
+      "probabilities": {
+        "Safe": 0.819,
+        "Caution": 0.149,
+        "High-Risk": 0.032
+      },
+      "state_machine_state": "Safe",
+      "passed": true,
+      "engineering_note": "Critical false-alarm check: halts < 60s at known intersections must remain Safe.",
+      "top_reasons": [
+        "Vehicle actively following planned route within tolerance (<100m).",
+        "Operating in standard surveillance transit corridor."
+      ]
+    },
+    {
+      "id": "SC-04",
+      "name": "Night-Time Normal Transit (No Anomaly)",
+      "category": "Nominal Operation",
+      "expected_class": 0,
+      "expected_label": "Safe",
+      "predicted_class": 0,
+      "predicted_label": "Safe",
+      "probabilities": {
+        "Safe": 0.655,
+        "Caution": 0.309,
+        "High-Risk": 0.036
+      },
+      "state_machine_state": "Safe",
+      "passed": true,
+      "engineering_note": "Validates that night-time alone does not trigger panic when vehicle adheres to path.",
+      "top_reasons": [
+        "Vehicle actively following planned route within tolerance (<100m).",
+        "Consistent transit motion (avg speed 42 km/h)."
+      ]
+    },
+    {
+      "id": "SC-05",
+      "name": "Minor Route Wobble / Lane Shift (Road Works)",
+      "category": "Nominal Operation",
+      "expected_class": 0,
+      "expected_label": "Safe",
+      "predicted_class": 0,
+      "predicted_label": "Safe",
+      "probabilities": {
+        "Safe": 0.963,
+        "Caution": 0.019,
+        "High-Risk": 0.017
+      },
+      "state_machine_state": "Safe",
+      "passed": true,
+      "engineering_note": "Tolerates minor lane deviations (<100m) without alarming passenger.",
+      "top_reasons": [
+        "Vehicle actively following planned route within tolerance (<100m).",
+        "Consistent transit motion (avg speed 24 km/h)."
+      ]
+    },
+    {
+      "id": "SC-06",
+      "name": "Heavy Corridor Gridlock / Extended Delay",
+      "category": "Boundary Condition",
+      "expected_class": 0,
+      "expected_label": "Safe",
+      "predicted_class": 0,
+      "predicted_label": "Safe",
+      "probabilities": {
+        "Safe": 0.662,
+        "Caution": 0.307,
+        "High-Risk": 0.031
+      },
+      "state_machine_state": "Safe",
+      "passed": true,
+      "engineering_note": "Crucial false-alarm suppression: Severe monsoon gridlock while adhering to planned route remains Safe to avoid passenger panic fatigue.",
+      "top_reasons": [
+        "Vehicle actively following planned route within tolerance (<100m)."
+      ]
+    },
+    {
+      "id": "SC-07",
+      "name": "Unscheduled Stationary Halt on Highway Shoulder",
+      "category": "Caution Condition",
+      "expected_class": 1,
+      "expected_label": "Caution",
+      "predicted_class": 1,
+      "predicted_label": "Caution",
+      "probabilities": {
+        "Safe": 0.579,
+        "Caution": 0.4,
+        "High-Risk": 0.021
+      },
+      "state_machine_state": "Caution",
+      "passed": true,
+      "engineering_note": "Triggers 15-second safety verification countdown to verify passenger wellbeing.",
+      "top_reasons": [
+        "Unscheduled stop duration (120 s).",
+        "Schedule delay ratio 1.4x nominal travel time."
+      ]
+    },
+    {
+      "id": "SC-08",
+      "name": "Moderate Arterial Detour (Traffic Diversion)",
+      "category": "Caution Condition",
+      "expected_class": 1,
+      "expected_label": "Caution",
+      "predicted_class": 1,
+      "predicted_label": "Caution",
+      "probabilities": {
+        "Safe": 0.409,
+        "Caution": 0.536,
+        "High-Risk": 0.055
+      },
+      "state_machine_state": "Caution",
+      "passed": true,
+      "engineering_note": "Detour > 200m requires in-app passenger reassurance without inducing alarm.",
+      "top_reasons": [
+        "Moderate detour/deviation detected (260 m).",
+        "Approaching boundary of caution area (monitored zone)."
+      ]
+    },
+    {
+      "id": "SC-09",
+      "name": "Late Night Off-Route Detour with Minor Stop",
+      "category": "Elevated Caution",
+      "expected_class": 1,
+      "expected_label": "Caution",
+      "predicted_class": 1,
+      "predicted_label": "Caution",
+      "probabilities": {
+        "Safe": 0.005,
+        "Caution": 0.983,
+        "High-Risk": 0.012
+      },
+      "state_machine_state": "Caution",
+      "passed": true,
+      "engineering_note": "Nighttime modifier heightens sensitivity; passenger prompt initiates immediately.",
+      "top_reasons": [
+        "Moderate detour/deviation detected (220 m).",
+        "Unscheduled stop duration (85 s)."
+      ]
+    },
+    {
+      "id": "SC-10",
+      "name": "Severe Route Deviation into Unlit Radial Road",
+      "category": "High-Risk Hazard",
+      "expected_class": 2,
+      "expected_label": "High-Risk",
+      "predicted_class": 2,
+      "predicted_label": "High-Risk",
+      "probabilities": {
+        "Safe": 0.001,
+        "Caution": 0.427,
+        "High-Risk": 0.572
+      },
+      "state_machine_state": "High-Risk",
+      "passed": true,
+      "engineering_note": "Severe deviation (>500m) triggers immediate alert broadcast.",
+      "top_reasons": [
+        "Significant route deviation: 620 m off planned bus corridor.",
+        "Inside high-risk buffer (55% risk): unlit/isolated zone."
+      ]
+    },
+    {
+      "id": "SC-11",
+      "name": "Prolonged Off-Route Stationary Stop",
+      "category": "High-Risk Hazard",
+      "expected_class": 2,
+      "expected_label": "High-Risk",
+      "predicted_class": 2,
+      "predicted_label": "High-Risk",
+      "probabilities": {
+        "Safe": 0.06,
+        "Caution": 0.011,
+        "High-Risk": 0.929
+      },
+      "state_machine_state": "High-Risk",
+      "passed": true,
+      "engineering_note": "Off-route dwell > 180s signifies probable distress/abduction vector.",
+      "top_reasons": [
+        "Significant route deviation: 480 m off planned bus corridor.",
+        "Prolonged unexpected stop: stationary for 240 seconds."
+      ]
+    },
+    {
+      "id": "SC-12",
+      "name": "Midnight Transit Inside Jeedimetla Industrial Belt",
+      "category": "High-Risk Hazard",
+      "expected_class": 2,
+      "expected_label": "High-Risk",
+      "predicted_class": 2,
+      "predicted_label": "High-Risk",
+      "probabilities": {
+        "Safe": 0.012,
+        "Caution": 0.011,
+        "High-Risk": 0.977
+      },
+      "state_machine_state": "High-Risk",
+      "passed": true,
+      "engineering_note": "Compound threat: night + high risk zone + prolonged stop.",
+      "top_reasons": [
+        "Significant route deviation: 420 m off planned bus corridor.",
+        "Prolonged unexpected stop: stationary for 190 seconds."
+      ]
+    },
+    {
+      "id": "SC-13",
+      "name": "Combined Worst-Case Distress Scenario",
+      "category": "Emergency Escalation",
+      "expected_class": 2,
+      "expected_label": "High-Risk",
+      "predicted_class": 2,
+      "predicted_label": "High-Risk",
+      "probabilities": {
+        "Safe": 0.007,
+        "Caution": 0.043,
+        "High-Risk": 0.951
+      },
+      "state_machine_state": "High-Risk",
+      "passed": true,
+      "engineering_note": "All danger vectors saturated. Emergency SMS + location link dispatched.",
+      "top_reasons": [
+        "Significant route deviation: 780 m off planned bus corridor.",
+        "Prolonged unexpected stop: stationary for 320 seconds."
+      ]
+    },
+    {
+      "id": "SC-14",
+      "name": "Erratic High-Speed Evasion Off Corridor",
+      "category": "High-Risk Hazard",
+      "expected_class": 2,
+      "expected_label": "High-Risk",
+      "predicted_class": 2,
+      "predicted_label": "High-Risk",
+      "probabilities": {
+        "Safe": 0.19,
+        "Caution": 0.325,
+        "High-Risk": 0.485
+      },
+      "state_machine_state": "High-Risk",
+      "passed": true,
+      "engineering_note": "Identifies vehicle hijacking / non-standard reckless diversion.",
+      "top_reasons": [
+        "Significant route deviation: 450 m off planned bus corridor.",
+        "Inside high-risk buffer (60% risk): unlit/isolated zone."
+      ]
+    }
+  ],
+  "cep_trade_offs_summary": {
+    "false_positives_mitigated": "Traffic stops <60s correctly classified as Safe (0 false alarms).",
+    "false_negatives_mitigated": "100% of severe deviations (>500m) classified as High-Risk.",
+    "boundary_handling": "Monsoon congestion and 120s halts correctly routed through Caution check-in rather than panic SMS."
+  }
+}

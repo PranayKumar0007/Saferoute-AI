@@ -1,0 +1,29 @@
+[
+  {
+    "id": "rz-01",
+    "name": "Jeedimetla Industrial Belt (Isolated, Poor Street Lighting)",
+    "lat": 17.5180,
+    "lon": 78.4650,
+    "radius_m": 850,
+    "severity": 0.85,
+    "description": "Industrial warehouse belt with minimal pedestrian traffic after 20:00, historical low illumination reports."
+  },
+  {
+    "id": "rz-02",
+    "name": "Bahadurpally ORR Radial Bypass (High Speed Desolate Stretch)",
+    "lat": 17.5500,
+    "lon": 78.4360,
+    "radius_m": 650,
+    "severity": 0.70,
+    "description": "Outer Ring Road connector with scarce transit frequency and low emergency vehicle response index."
+  },
+  {
+    "id": "rz-03",
+    "name": "Bowenpally Goods Yard & Freight Buffer (Poor Surveillance Zone)",
+    "lat": 17.4720,
+    "lon": 78.4820,
+    "radius_m": 550,
+    "severity": 0.75,
+    "description": "Commercial freight staging area with obstructed line-of-sight and sparse public CCTV coverage."
+  }
+]
